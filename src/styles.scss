@@ -1,0 +1,62 @@
+@import '@angular/cdk/overlay-prebuilt.css';
+
+:root {
+  --primary-color: hsla(209, 95%, 47.3%, 1);
+
+  --mat-table-header-headline-font: Arial;
+  --mat-table-header-headline-size: 12px;
+
+  --mat-table-row-item-label-text-font: Arial;
+  --mat-table-row-item-label-text-size: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  cursor: default;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+html, body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mat-mdc-header-cell {
+  .mat-sort-header-container {
+    cursor: pointer;
+
+    &.mat-sort-header-sorted {
+      .mat-sort-header-arrow {
+        color: var(--primary-color);
+      }
+    }
+
+    .mat-sort-header-content {
+      cursor: pointer;
+    }
+
+    .mat-sort-header-arrow {
+      opacity: 0.3;
+
+      svg {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+      }
+    }
+  }
+}
+
+.edit-overlay-container {
+  background: #fff;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+}
+
+.backdrop-container {
+  background: unset;
+}

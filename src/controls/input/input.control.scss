@@ -1,0 +1,26 @@
+:host {
+  align-items: center;
+  display: flex;
+  flex: 1 1;
+  height: 29px;
+}
+
+input {
+  background: none;
+  border: none;
+  flex: 1;
+  padding: 0 8px;
+  font-size: var(--mat-table-row-item-label-text-size);
+  font-family: var(--mat-table-row-item-label-text-font);
+}
+
+.icon {
+  color: #000;
+  font-size: 18px;
+  margin-right: 5px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+}

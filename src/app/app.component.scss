@@ -1,0 +1,128 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding-left: 50px;
+}
+
+h1 {
+  margin: 30px 0;
+}
+
+cdk-virtual-scroll-viewport {
+  display: flex;
+  flex: 1 1;
+  overflow: auto;
+  width: 100%;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    tr {
+      height: unset;
+
+      &:nth-child(even) {
+        td {
+          background: #f8f8f8;
+        }
+      }
+
+      &:nth-child(odd) {
+        td {
+          background: #fff;
+        }
+      }
+
+      &:has(td.focus) {
+        td {
+          background: #eef4fa;
+        }
+      }
+
+      th {
+        background: #efefef;
+        border: none;
+        font-weight: bold;
+        padding: 8px;
+      }
+
+      td {
+        border: 1px solid #eee;
+        padding: unset;
+        height: 30px;
+
+        &.focus {
+          background: #c3dbf6 !important;
+        }
+
+        .text {
+          overflow: hidden;
+          padding: 8px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+
+      .mat-column {
+        &-selection {
+          width: 20px;
+
+          .checkbox__wrapper {
+            display: flex;
+            justify-content: center;
+          }
+        }
+
+        &-firstname {
+          width: 200px;
+        }
+
+        &-lastname {
+          //width: 200px;
+        }
+
+        &-birthdate {
+          width: 200px;
+        }
+
+        &-city {
+          width: 200px;
+        }
+
+        &-street {
+          width: 200px;
+        }
+
+        &-country {
+          width: 200px;
+        }
+
+        &-actions {
+          padding: unset;
+          width: 0;
+
+          .actions__wrapper {
+            display: flex;
+            gap: 2.5px;
+            justify-content: flex-end;
+            margin: 0 5px;
+          }
+
+          .icon {
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.4em;
+            padding: 5px;
+
+            &:hover {
+              color: var(--primary-color);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

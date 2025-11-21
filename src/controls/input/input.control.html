@@ -1,0 +1,4 @@
+<input #input type="text" [ngModel]="value()" (ngModelChange)="valueChange($event)">
+
+<span class="icon material-symbols-outlined" title="Kopieren" (click)="copy()">content_copy</span>
+<span class="icon material-symbols-outlined" title="Eingabe löschen" (click)="clear()">cancel</span>
