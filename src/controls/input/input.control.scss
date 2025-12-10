@@ -1,26 +1,90 @@
 :host {
-  align-items: center;
   display: flex;
   flex: 1 1;
-  height: 29px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 15px hsla(209, 95%, 30%, 0.6);
 }
 
-input {
-  background: none;
-  border: none;
-  flex: 1;
-  padding: 0 8px;
-  font-size: var(--mat-table-row-item-label-text-size);
-  font-family: var(--mat-table-row-item-label-text-font);
+.input-wrapper {
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+
+  input {
+    border: 1px dashed rgba(0, 0, 0, 0.3);
+    border-top: none;
+    border-left: none;
+    padding: 0 8px;
+    height: 29px;
+    font-size: var(--mat-table-row-item-label-text-size);
+    font-family: var(--mat-table-row-item-label-text-font);
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+
+  .actions {
+    display: flex;
+    padding: 0 8px;
+    gap: 8px;
+
+    .icon {
+      color: #000;
+      font-size: 14px;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
 }
 
-.icon {
-  color: #000;
-  font-size: 18px;
-  margin-right: 5px;
-  cursor: pointer;
+.focusable {
+  &:focus {
+    outline: 1px solid #000;
+  }
+}
 
-  &:hover {
-    color: var(--primary-color);
+.confirmation {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 4px 4px 8px;
+
+  .button {
+    align-items: center;
+    cursor: pointer;
+    font-size: var(--mat-table-row-item-label-text-size);
+    font-family: var(--mat-table-row-item-label-text-font);
+    display: flex;
+
+    &.save {
+      .icon {
+        color: darkgreen;
+      }
+    }
+
+    &.close {
+      .icon {
+        color: darkred;
+      }
+    }
+
+    span {
+      cursor: pointer;
+    }
+
+    .icon {
+      font-size: 18px;
+      //margin-right: 2px;
+    }
+
+    &:hover {
+      color: var(--primary-color);
+    }
   }
 }

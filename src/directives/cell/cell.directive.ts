@@ -1,5 +1,4 @@
 import {
-  contentChild,
   Directive,
   effect,
   ElementRef,
@@ -13,6 +12,7 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { fromEvent, tap } from 'rxjs';
 
 import { TableDirective } from '../table/table.directive';
 
@@ -30,9 +30,16 @@ export class CellDirective implements OnInit {
   private readonly _overlay = inject(Overlay);
   private readonly _viewContainerRef = inject(ViewContainerRef);
 
-  public readonly portalTemplate = contentChild<TemplateRef<any>>('portalTemplate', { read: TemplateRef<any> as any });
+  private readonly _resize$ = fromEvent(window, 'resize')
+    .pipe(
+      tap(() => {
+        this.overlayRef?.updatePosition();
+        this.overlayRef?.updateSize({ width: this._elementRef.nativeElement.clientWidth });
+      }),
+    )
 
   public readonly apCell = input({ row: 0, col: 0 });
+  public readonly portal = input<TemplateRef<any>>();
 
   public readonly editMode = signal(false);
   public readonly hasFocus = signal(false);
@@ -55,9 +62,6 @@ export class CellDirective implements OnInit {
   @HostListener('keydown', ['$event'])
   public keydown(event: KeyboardEvent): void {
     switch (event.key) {
-      case 'Escape':
-        this.editMode.set(false);
-        break;
       case 'Enter':
         this.editMode.set(true);
         break;
@@ -72,6 +76,8 @@ export class CellDirective implements OnInit {
         this.disposeEditOverlay();
       }
     });
+
+    this._resize$.subscribe();
   }
 
   public ngOnInit(): void {
@@ -96,7 +102,7 @@ export class CellDirective implements OnInit {
   private overlayRef?: OverlayRef;
 
   public showEditOverlay(): void {
-    const template = this.portalTemplate();
+    const template = this.portal();
     if (!template) {
       return;
     }
@@ -112,7 +118,7 @@ export class CellDirective implements OnInit {
       positionStrategy,
       width: this._elementRef.nativeElement.clientWidth,
       hasBackdrop: true,
-      panelClass: 'edit-overlay-container',
+      //panelClass: 'edit-overlay-container',
       backdropClass: 'backdrop-container',
     });
 
@@ -120,10 +126,11 @@ export class CellDirective implements OnInit {
 
     this.overlayRef.attach(portal);
 
-    this.overlayRef.backdropClick().subscribe(() => this.overlayRef?.dispose());
+    this.overlayRef.backdropClick().subscribe(() => this.disposeEditOverlay());
   }
 
   public disposeEditOverlay(): void {
+    this.editMode.set(false);
     this.overlayRef?.dispose();
   }
 }

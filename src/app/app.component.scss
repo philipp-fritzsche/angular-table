@@ -1,19 +1,197 @@
 :host {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas:
+    "sidebar topbar"
+    "sidebar content";
   height: 100%;
+  grid-template-columns: 250px 1fr;
+  grid-auto-rows: 50px 1fr;
   overflow: hidden;
-  padding-left: 50px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-h1 {
-  margin: 30px 0;
+.sidebar {
+  grid-area: sidebar;
+  background: #05003b;
+}
+
+.top-bar {
+  grid-area: topbar;
+  background: lightgrey;
+  border-bottom: 1px solid #c1c1c1;
+}
+
+.container {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.content {
+  grid-area: content;
+  background: #616161;
+  overflow: hidden;
+
+  display: grid;
+  grid-template-areas:
+    "custom-views filter details"
+    "custom-views messages details";
+  grid-template-columns: 250px 350px 1fr;
+  grid-template-rows: 40px 1fr;
+
+  padding: 12px;
+  gap: 12px;
+
+  .custom-views {
+    grid-area: custom-views;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+
+    .custom-filter {
+      display: flex;
+      height: 150px;
+      background: lightgrey;
+      border-radius: 12px;
+    }
+  }
+
+  .filter {
+    grid-area: filter;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 12px;
+  }
+
+  .messages {
+    grid-area: messages;
+    overflow: auto;
+    font-size: 0.9em;
+
+    .message {
+      display: flex;
+      gap: 12px;
+      height: 70px;
+      align-items: center;
+      border-bottom: 1px solid grey;
+      padding: 12px;
+    }
+  }
+
+  .details {
+    grid-area: details;
+    display: flex;
+    flex-direction: column;
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+
+      .meta {
+        display: grid;
+        grid-template-areas:
+          "anhaenge hover-section"
+          "info info";
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 40px min-content;
+
+        .anhaenge {
+          grid-area: anhaenge;
+          display: flex;
+          list-style-type: none;
+          padding: 8px;
+          gap: 8px;
+
+          li {
+            background: lightgrey;
+            border-radius: 4px;
+            font-size: 0.8em;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+
+            &:last-child {
+              background: unset;
+            }
+
+            &.selected, {
+              background: #067eeb;
+              color: #fff;
+            }
+          }
+        }
+
+        .hover-section {
+          grid-area: hover-section;
+          display: flex;
+          align-items: center;
+
+          .material-symbols-outlined {
+            font-size: 1.2em;
+            padding: 8px;
+          }
+
+          &:hover {
+            ~ .info {
+              display: flex;
+            }
+          }
+        }
+
+        .info {
+          grid-area: info;
+          display: none;
+          padding: 12px;
+          gap: 24px;
+
+          > div {
+            display: flex;
+            flex-direction: column;
+
+            label {
+              font-size: 10px;
+            }
+
+            span {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+
+      .verlinkung {
+        height: 100%;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+
+        > input {
+          margin: 12px 0;
+        }
+      }
+    }
+
+    .viewer {
+      flex: 1 1;
+      height: 100%;
+
+      embed {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 }
 
 cdk-virtual-scroll-viewport {
   display: flex;
   flex: 1 1;
   overflow: auto;
+  height: 100%;
   width: 100%;
 
   table {

@@ -1,4 +1,21 @@
-<input #input type="text" [ngModel]="value()" (ngModelChange)="valueChange($event)">
+<div class="input-wrapper">
+  <input #input type="text" [ngModel]="value()" (ngModelChange)="valueChange($event)" tabindex="1">
 
-<span class="icon material-symbols-outlined" title="Kopieren" (click)="copy()">content_copy</span>
-<span class="icon material-symbols-outlined" title="Eingabe löschen" (click)="clear()">cancel</span>
+  <div class="actions">
+    <span class="icon material-symbols-outlined focusable" title="Kopieren" (click)="copy()" tabindex="2">content_copy</span>
+    <span class="icon material-symbols-outlined focusable" title="Eingabe löschen" (click)="clear()" tabindex="3">ink_eraser</span>
+  </div>
+</div>
+
+<div class="confirmation">
+  <div class="button save focusable" (click)="save()" tabindex="4">
+    <span class="icon material-symbols-outlined">check_circle</span>
+    <!--<span>Speichern</span>-->
+  </div>
+
+  <div class="button close focusable" (click)="close()" tabindex="5">
+    <span class="icon material-symbols-outlined">cancel</span>
+    <!--<span>Abbrechen</span>-->
+  </div>
+</div>
+

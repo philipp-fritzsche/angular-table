@@ -53,4 +53,12 @@ export class InputControl {
     this.value.set('');
     this.focus();
   }
+
+  public save(): void {
+    this.close();
+  }
+
+  public close(): void {
+    this._apCell.disposeEditOverlay();
+  }
 }

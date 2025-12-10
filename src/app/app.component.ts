@@ -1,8 +1,10 @@
 import { CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
-import { CdkPortal } from '@angular/cdk/portal';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Component, inject, OnInit, SecurityContext, signal, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   MatCell,
   MatCellDef,
@@ -15,13 +17,13 @@ import {
   MatRowDef,
   MatTable,
 } from '@angular/material/table';
-import { tap } from 'rxjs';
 
 import { CellDirective, TableDirective } from '../directives';
 import { InputControl } from '../controls/input/input.control';
 
 import { ActaportTableDataSource } from './table.data-source';
 import { Contact } from './contact.model';
+import { SplitAreaComponent, SplitComponent } from 'angular-split';
 
 
 @Component({
@@ -48,29 +50,56 @@ import { Contact } from './contact.model';
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     InputControl,
+    FormsModule,
+    SplitComponent,
+    SplitAreaComponent,
   ],
 })
 export class AppComponent implements OnInit {
+  private readonly _sanitizer = inject(DomSanitizer);
+
   @ViewChild(CdkVirtualScrollViewport, { static: true })
   public readonly viewport!: CdkVirtualScrollViewport;
 
-  public readonly displayedColumns = [ 'selection', 'firstname', 'lastname', 'birthdate', 'city', 'street', 'country', 'actions' ];
+  public readonly displayedColumns = [ 'selection', 'firstname', 'lastname', 'birthdate', 'city', 'actions' ];
   public readonly dataSource = new ActaportTableDataSource<Contact>(this.getContacts());
+  public readonly selection = new SelectionModel(true);
 
-  private readonly contacts = signal<Array<Contact>>([]);
+  public readonly toggle = signal(false);
+
+  public readonly attachments = ['Nachricht', 'Anhang-1', 'Anhang-2', 'Anhang-3'];
+  public readonly attachmentUrl = signal<SafeUrl>('');
+  public readonly selectedAttachments = signal<Array<string>>([...this.attachments]);
+  public readonly selectedAttachment = signal(this.attachments[0]);
+
+  public show(attachment: string): void {
+    this.selectedAttachment.set(attachment);
+    this.attachmentUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(`http://localhost:4200/assets/${attachment}.pdf`));
+  }
 
   public ngOnInit(): void {
-    this.viewport.scrolledIndexChange
-      .pipe(
-        tap(index => {
-          if (index > 4) {
-            this.contacts.set([...this.dataSource.data, ...this.getContacts()]);
+    this.dataSource.data = this.getContacts();
+    this.show(this.attachments[0]);
+  }
 
-            this.dataSource.data = this.contacts();
-          }
-        }),
-      )
-      .subscribe();
+  public isAllSelected(): boolean {
+    return this.selection.selected.length === this.dataSource.data.length;
+  }
+
+  public masterToggleChange(value: boolean): void {
+    if (value) {
+      if (this.isAllSelected()) {
+        return;
+      }
+
+      this.selection.setSelection(...this.dataSource.data.map(contact => contact.id));
+      return;
+    }
+
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
   }
 
   private getContacts(): Array<Contact> {
@@ -146,133 +175,7 @@ export class AppComponent implements OnInit {
         city: 'Springfield',
         street: '342 Police Department',
         country: 'USA',
-      },
-      {
-        id: 9,
-        firstname: 'Fat',
-        lastname: 'Toni',
-        birthdate: '1974-03-14',
-        city: 'Springfield',
-        street: '123 Mafia Street',
-        country: 'USA',
-      },
-      {
-        id: 10,
-        firstname: 'Nelson',
-        lastname: 'Muntz',
-        birthdate: '1998-11-02',
-        city: 'Springfield',
-        street: '23 Motel One Street',
-        country: 'USA',
-      },
-      {
-        id: 11,
-        firstname: 'Milhouse',
-        lastname: 'van Houten',
-        birthdate: '2004-01-03',
-        city: 'Springfield',
-        street: '23 Milhouse Way',
-        country: 'USA',
-      },
-      {
-        id: 12,
-        firstname: 'Homer',
-        lastname: 'Simpson',
-        birthdate: '1982-01-30',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
-      },
-      {
-        id: 13,
-        firstname: 'Marge',
-        lastname: 'Simpson',
-        birthdate: '1985-04-11',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
-      },
-      {
-        id: 14,
-        firstname: 'Bart',
-        lastname: 'Simpson',
-        birthdate: '2000-12-03',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
-      },
-      {
-        id: 15,
-        firstname: 'Lisa',
-        lastname: 'Simpson',
-        birthdate: '2003-01-28',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
-      },
-      {
-        id: 16,
-        firstname: 'Ned',
-        lastname: 'Flanders',
-        birthdate: '1979-08-28',
-        city: 'Springfield',
-        street: '743 Evergreen Terrace',
-        country: 'USA',
-      },
-      {
-        id: 17,
-        firstname: 'Toad',
-        lastname: 'Flanders',
-        birthdate: '2002-07-17',
-        city: 'Springfield',
-        street: '743 Evergreen Terrace',
-        country: 'USA',
-      },
-      {
-        id: 18,
-        firstname: 'Carl',
-        lastname: 'Carlson',
-        birthdate: '2002-07-17',
-        city: 'Springfield',
-        street: '45 Carl & Lenny Street',
-        country: 'USA',
-      },
-      {
-        id: 19,
-        firstname: 'Chief',
-        lastname: 'Wiggum',
-        birthdate: '1983-08-17',
-        city: 'Springfield',
-        street: '342 Police Department',
-        country: 'USA',
-      },
-      {
-        id: 20,
-        firstname: 'Fat',
-        lastname: 'Toni',
-        birthdate: '1974-03-14',
-        city: 'Springfield',
-        street: '123 Mafia Street',
-        country: 'USA',
-      },
-      {
-        id: 21,
-        firstname: 'Nelson',
-        lastname: 'Muntz Muntz Muntz Muntz Muntz Muntz Muntz Muntz Muntz',
-        birthdate: '1998-11-02',
-        city: 'Springfield',
-        street: '23 Motel One Street',
-        country: 'USA',
-      },
-      {
-        id: 22,
-        firstname: 'Milhouse',
-        lastname: 'van Houten',
-        birthdate: '2004-01-03',
-        city: 'Springfield',
-        street: '23 Milhouse Way',
-        country: 'USA',
-      },
+      }
     ]
   };
 }

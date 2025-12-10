@@ -1,102 +1,168 @@
-<h1>Kontakte</h1>
+<div class="sidebar"></div>
+<div class="top-bar"></div>
+<div class="content">
+  <div class="custom-views container">
+    <div class="custom-filter"></div>
+    <div class="custom-filter"></div>
+    <div class="custom-filter"></div>
+    <div class="custom-filter"></div>
+  </div>
 
-<cdk-virtual-scroll-viewport [itemSize]="30">
-  <table mat-table matSort [dataSource]="dataSource" apTable>
-    <ng-container matColumnDef="selection">
-      <th mat-header-cell *matHeaderCellDef>
-        <div class="checkbox__wrapper">
+  <div class="filter container">
+    <span class="icon material-symbols-outlined">filter_list</span>
+  </div>
+
+  <div class="messages container">
+    <ol>
+      @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]; track i) {
+        <li class="message">
           <input type="checkbox">
+          <span>Nachricht {{ i }}</span>
+        </li>
+      }
+    </ol>
+  </div>
+
+  <div class="details container">
+    <as-split direction="vertical">
+      <as-split-area size="8">
+        <div class="message">
+          <div class="meta">
+            <ul class="anhaenge">
+              @for (i of attachments; track i) {
+                <li (click)="show(i)" (dblclick)="selectedAttachments.set([i])" [class.selected]="selectedAttachment() === i">{{ i }}</li>
+              }
+              <li>
+                <div (click)="toggle.set(!toggle())">
+                  @if (toggle()) {
+                    <span class="icon material-symbols-outlined" >toggle_on</span>
+                  } @else {
+                    <span class="icon material-symbols-outlined" >toggle_off</span>
+                  }
+                </div>
+              </li>
+            </ul>
+
+            <div class="hover-section">
+              <span class="icon material-symbols-outlined">reply</span>
+              <span class="icon material-symbols-outlined">reply_all</span>
+              <span class="icon material-symbols-outlined">forward</span>
+              <span class="icon material-symbols-outlined">delete</span>
+              <span class="icon material-symbols-outlined">info</span>
+            </div>
+
+            <div class="info">
+              <div>
+                <label>Absender</label>
+                <span>max.mustermann@actaport.de</span>
+              </div>
+
+              <div>
+                <label>Datum</label>
+                <span>12.12.2025</span>
+              </div>
+
+              <div>
+                <label>Priorität</label>
+                <span>Dringlich</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="verlinkung">
+            @if (toggle()) {
+              <cdk-virtual-scroll-viewport [itemSize]="30">
+                <table mat-table matSort [dataSource]="dataSource" apTable>
+                  <ng-container matColumnDef="selection">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <div class="checkbox__wrapper">
+                        <input type="checkbox" [ngModel]="isAllSelected()" (ngModelChange)="masterToggleChange($event)">
+                      </div>
+                    </th>
+                    <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 1 }">
+                      <div class="checkbox__wrapper">
+                        <input type="checkbox" [ngModel]="selection.isSelected(contact.id)" (ngModelChange)="selection.toggle(contact.id)">
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="firstname">
+                    <th mat-header-cell mat-sort-header="firstname" *matHeaderCellDef>Vorname</th>
+                    <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 2 }" [portal]="portalTemplate">
+                      <span class="text">{{ contact.firstname }}</span>
+
+                      <ng-template #portalTemplate>
+                        <input-control [(value)]="contact.firstname"></input-control>
+                      </ng-template>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lastname">
+                    <th mat-header-cell mat-sort-header="lastname" *matHeaderCellDef>Nachname</th>
+                    <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 3 }" [portal]="portalTemplate">
+                      <span class="text">{{ contact.lastname }}</span>
+
+                      <ng-template #portalTemplate>
+                        <input-control [(value)]="contact.lastname"></input-control>
+                      </ng-template>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="birthdate">
+                    <th mat-header-cell mat-sort-header="birthdate" *matHeaderCellDef>Geburtsdatum</th>
+                    <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 4 }" [portal]="portalTemplate">
+                      <span class="text">{{ contact.birthdate }}</span>
+
+                      <ng-template #portalTemplate>
+                        <input-control [(value)]="contact.birthdate"></input-control>
+                      </ng-template>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="city">
+                    <th mat-header-cell mat-sort-header="city" *matHeaderCellDef>Stadt</th>
+                    <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 5 }" [portal]="portalTemplate">
+                      <span class="text">{{ contact.city }}</span>
+
+                      <ng-template #portalTemplate>
+                        <input-control [(value)]="contact.city"></input-control>
+                      </ng-template>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef>
+                      <div class="actions__wrapper">
+                        <span class="icon material-symbols-outlined">view_column</span>
+                      </div>
+                    </th>
+                    <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 8 }">
+                      <div class="actions__wrapper">
+                        <span class="icon material-symbols-outlined">visibility</span>
+                        <span class="icon material-symbols-outlined">edit</span>
+                        <span class="icon material-symbols-outlined">more_vert</span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+              </cdk-virtual-scroll-viewport>
+            } @else {
+              <input>
+              <input>
+              <input>
+            }
+          </div>
         </div>
-      </th>
-      <td mat-cell *matCellDef="let i = index" [apCell]="{ row: i, col: 1 }">
-        <div class="checkbox__wrapper">
-          <input type="checkbox">
+      </as-split-area>
+
+      <as-split-area>
+        <div class="viewer">
+          <embed [src]="attachmentUrl()" type="application/pdf">
         </div>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="firstname">
-      <th mat-header-cell mat-sort-header="firstname" *matHeaderCellDef>Vorname</th>
-      <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 2 }">
-        <span class="text">{{ contact.firstname }}</span>
-
-        <ng-template #portalTemplate>
-          <input-control [(value)]="contact.firstname"></input-control>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="lastname">
-      <th mat-header-cell mat-sort-header="lastname" *matHeaderCellDef>Nachname</th>
-      <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 3 }">
-        <span class="text">{{ contact.lastname }}</span>
-
-        <ng-template #portalTemplate>
-          <input-control [(value)]="contact.lastname"></input-control>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="birthdate">
-      <th mat-header-cell mat-sort-header="birthdate" *matHeaderCellDef>Geburtsdatum</th>
-      <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 4 }">
-        <span class="text">{{ contact.birthdate }}</span>
-
-        <ng-template #portalTemplate>
-          <input-control [(value)]="contact.birthdate"></input-control>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="city">
-      <th mat-header-cell mat-sort-header="city" *matHeaderCellDef>Stadt</th>
-      <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 5 }">
-        <span class="text">{{ contact.city }}</span>
-
-        <ng-template #portalTemplate>
-          <input-control [(value)]="contact.city"></input-control>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="street">
-      <th mat-header-cell mat-sort-header="street" *matHeaderCellDef>Straße</th>
-      <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 6 }">
-        <span class="text">{{ contact.street }}</span>
-
-        <ng-template #portalTemplate>
-          <input-control [(value)]="contact.street"></input-control>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="country">
-      <th mat-header-cell mat-sort-header="country" *matHeaderCellDef>Land</th>
-      <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 7 }">
-        <span class="text">{{ contact.country }}</span>
-
-        <ng-template #portalTemplate>
-          <input-control [(value)]="contact.country"></input-control>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions" stickyEnd>
-      <th mat-header-cell *matHeaderCellDef>
-        <div class="actions__wrapper">
-          <span class="icon material-symbols-outlined">view_column</span>
-        </div>
-      </th>
-      <td mat-cell *matCellDef="let contact; let i = index" [apCell]="{ row: i, col: 8 }">
-        <div class="actions__wrapper">
-          <span class="icon material-symbols-outlined">visibility</span>
-          <span class="icon material-symbols-outlined">edit</span>
-          <span class="icon material-symbols-outlined">more_vert</span>
-        </div>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-</cdk-virtual-scroll-viewport>
+      </as-split-area>
+    </as-split>
+  </div>
+</div>
