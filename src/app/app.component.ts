@@ -74,7 +74,8 @@ export class AppComponent implements OnInit {
 
   public show(attachment: string): void {
     this.selectedAttachment.set(attachment);
-    this.attachmentUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(`http://localhost:4200/assets/${attachment}.pdf`));
+    //this.attachmentUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(`http://localhost:4200/assets/${attachment}.pdf`));
+    this.attachmentUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(`https://philipp-fritzsche.github.io/angular-table/assets/${attachment}.pdf`));
   }
 
   public ngOnInit(): void {
