@@ -1,7 +1,7 @@
 import { CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Component, inject, OnInit, SecurityContext, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,13 +17,14 @@ import {
   MatRowDef,
   MatTable,
 } from '@angular/material/table';
+import { SplitAreaComponent, SplitComponent } from 'angular-split';
 
 import { CellDirective, TableDirective } from '../directives';
 import { InputControl } from '../controls/input/input.control';
 
 import { ActaportTableDataSource } from './table.data-source';
-import { Contact } from './contact.model';
-import { SplitAreaComponent, SplitComponent } from 'angular-split';
+import { Entity } from './entity.model';
+import { Document } from './documents.model';
 
 
 @Component({
@@ -61,8 +62,12 @@ export class AppComponent implements OnInit {
   @ViewChild(CdkVirtualScrollViewport, { static: true })
   public readonly viewport!: CdkVirtualScrollViewport;
 
-  public readonly displayedColumns = [ 'selection', 'firstname', 'lastname', 'birthdate', 'city', 'actions' ];
-  public readonly dataSource = new ActaportTableDataSource<Contact>(this.getContacts());
+  public readonly displayedColumnsDocuments = [ 'name', 'akte', 'ordner', 'benutzer' ];
+  public readonly dataSourceDocuments = new ActaportTableDataSource<Document>(this.getDocuments());
+
+  public readonly displayedColumnsEntities = [ 'type', 'date', 'title', 'attachments', 'actions' ];
+  public readonly dataSourceEntities = new ActaportTableDataSource<Entity>(this.getEntities());
+
   public readonly selection = new SelectionModel(true);
 
   public readonly toggle = signal(false);
@@ -74,17 +79,15 @@ export class AppComponent implements OnInit {
 
   public show(attachment: string): void {
     this.selectedAttachment.set(attachment);
-    //this.attachmentUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(`http://localhost:4200/assets/${attachment}.pdf`));
     this.attachmentUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(`https://philipp-fritzsche.github.io/angular-table/assets/${attachment}.pdf`));
   }
 
   public ngOnInit(): void {
-    this.dataSource.data = this.getContacts();
     this.show(this.attachments[0]);
   }
 
   public isAllSelected(): boolean {
-    return this.selection.selected.length === this.dataSource.data.length;
+    return this.selection.selected.length === this.dataSourceDocuments.data.length;
   }
 
   public masterToggleChange(value: boolean): void {
@@ -93,7 +96,7 @@ export class AppComponent implements OnInit {
         return;
       }
 
-      this.selection.setSelection(...this.dataSource.data.map(contact => contact.id));
+      this.selection.setSelection(...this.dataSourceDocuments.data.map(contact => contact.id));
       return;
     }
 
@@ -103,80 +106,62 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private getContacts(): Array<Contact> {
+  private getDocuments(): Array<Document> {
     return [
       {
         id: 1,
-        firstname: 'Homer',
-        lastname: 'Simpson',
-        birthdate: '1982-01-30',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
+        name: 'Nachricht',
+        akte: '1/26',
+        ordner: 'Dokumente',
+        benutzer: 'Harry Potter',
       },
       {
         id: 2,
-        firstname: 'Marge',
-        lastname: 'Simpson',
-        birthdate: '1985-04-11',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
+        name: 'Anhang 1',
+        akte: '1/26',
+        ordner: 'Dokumente',
+        benutzer: 'Harry Potter',
       },
       {
         id: 3,
-        firstname: 'Bart',
-        lastname: 'Simpson',
-        birthdate: '2000-12-03',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
+        name: 'Anhang 2',
+        akte: '1/26',
+        ordner: 'Dokumente',
+        benutzer: 'Harry Potter',
       },
       {
         id: 4,
-        firstname: 'Lisa',
-        lastname: 'Simpson',
-        birthdate: '2003-01-28',
-        city: 'Springfield',
-        street: '742 Evergreen Terrace',
-        country: 'USA',
+        name: 'Anhang 3',
+        akte: '1/26',
+        ordner: 'Dokumente',
+        benutzer: 'Harry Potter',
+      },
+    ]
+  };
+
+  private getEntities(): Array<Entity> {
+    return [
+      {
+        id: 1,
+        type: 'Frist',
+        date: '01.01.2026',
+        title: 'Berufung',
+        attachments: 'Anhang 1',
       },
       {
-        id: 5,
-        firstname: 'Ned',
-        lastname: 'Flanders',
-        birthdate: '1979-08-28',
-        city: 'Springfield',
-        street: '743 Evergreen Terrace',
-        country: 'USA',
+        id: 2,
+        type: 'Frist',
+        date: '10.01.2026',
+        title: 'Klage',
+        attachments: 'Anhang 1, Anhang 2',
       },
       {
-        id: 6,
-        firstname: 'Toad',
-        lastname: 'Flanders',
-        birthdate: '2002-07-17',
-        city: 'Springfield',
-        street: '743 Evergreen Terrace',
-        country: 'USA',
+        id: 3,
+        type: 'Aufgabe',
+        date: '13.05.2026',
+        title: 'Schriftsatz prüfen',
+        attachments: '',
       },
-      {
-        id: 7,
-        firstname: 'Carl',
-        lastname: 'Carlson',
-        birthdate: '2002-07-17',
-        city: 'Springfield',
-        street: '45 Carl & Lenny Street',
-        country: 'USA',
-      },
-      {
-        id: 8,
-        firstname: 'Chief',
-        lastname: 'Wiggum',
-        birthdate: '1983-08-17',
-        city: 'Springfield',
-        street: '342 Police Department',
-        country: 'USA',
-      }
     ]
   };
 }
