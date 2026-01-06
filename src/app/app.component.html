@@ -30,7 +30,7 @@
           <div class="meta">
             <ul class="anhaenge">
               @for (i of attachments; track i) {
-                <li (click)="show(i)" (dblclick)="selectedAttachments.set([i])" [class.selected]="selectedAttachment() === i">{{ i }}</li>
+                <li (click)="show(i)" (dblclick)="selectedAttachments.set([i])" [class.selected]="selectedAttachment() === i"><input type="checkbox"> {{ i }}</li>
               }
               <li>
                 <div (click)="toggle.set(!toggle())">
