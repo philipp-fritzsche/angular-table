@@ -28,11 +28,25 @@
       <as-split-area size="20">
         <div class="message">
           <div class="meta">
-            <ul class="anhaenge">
-              @for (i of attachments; track i) {
-                <li (click)="show(i)" (dblclick)="selectedAttachments.set([i])" [class.selected]="selectedAttachment() === i"><input type="checkbox"> {{ i }}</li>
+            <ul class="groups">
+              @for (group of groupedAttachments; track $index) {
+                <div class="group">
+                  <span>1{{ $index }}/25</span>
+                  <ul class="anhaenge">
+                    @for (attachement of group; track attachement) {
+                      <li (click)="show(attachement)" [class.selected]="selectedAttachment() === attachement">
+                        {{ attachement }}
+                      </li>
+                    }
+                  </ul>
+                </div>
               }
-              <li>
+              <div class="group">
+                <span>Unverknüpfte Anhänge</span>
+                <ul class="anhaenge"></ul>
+              </div>
+
+              <!--<li>
                 <div (click)="toggle.set(!toggle())">
                   @if (toggle()) {
                     <span class="icon material-symbols-outlined" >toggle_on</span>
@@ -40,7 +54,7 @@
                     <span class="icon material-symbols-outlined" >toggle_off</span>
                   }
                 </div>
-              </li>
+              </li>-->
             </ul>
 
             <div class="hover-section">
@@ -137,8 +151,9 @@
             } @else {
               <div class="entity-actions">
                 <input placeholder="Akte" value="1/26">
-                <input placeholder="Benutzer" value="Dokumente">
-                <input placeholder="Ordner" value="Harry Potter">
+                <input placeholder="Ordner" value="Dokumente">
+                <input placeholder="Name" value="datei.pdf">
+                <input placeholder="Benutzer" value="Harry Potter">
                 <span class="place"></span>
                 <button>+ Frist</button>
                 <button>+ Aufgabe</button>

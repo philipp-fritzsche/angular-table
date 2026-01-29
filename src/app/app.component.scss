@@ -97,29 +97,62 @@
           "anhaenge hover-section"
           "info info";
         grid-template-columns: 1fr min-content;
-        grid-template-rows: 40px min-content;
+        grid-template-rows: min-content min-content;
+
+        .groups {
+          display: flex;
+
+          .group {
+            align-items: center;
+            border: 1px dashed #000;
+            background: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            padding: 4px 6px 6px 6px;
+            margin: 2px;
+
+            span {
+              font-size: 0.8em;
+              margin-bottom: 4px;
+            }
+
+            &:nth-child(1) {
+              --background-color: #98c5c1;
+            }
+
+            &:nth-child(2) {
+              --background-color: #baa5da;
+            }
+
+            &:nth-child(3) {
+              --background-color: #c5c5c5;
+            }
+          }
+        }
 
         .anhaenge {
           grid-area: anhaenge;
           display: flex;
           list-style-type: none;
-          padding: 8px;
           gap: 8px;
 
           li {
             background: lightgrey;
+            border: 1px solid grey;
             border-radius: 4px;
             font-size: 0.8em;
             padding: 4px 8px;
             display: flex;
             align-items: center;
 
-            &:last-child {
+            /*&:last-child {
               background: unset;
-            }
+            }*/
 
             &.selected, {
               background: #067eeb;
+              border-color: #1d5383;
               color: #fff;
             }
           }

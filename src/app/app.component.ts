@@ -72,9 +72,12 @@ export class AppComponent implements OnInit {
 
   public readonly toggle = signal(false);
 
-  public readonly attachments = ['Nachricht', 'Anhang-1', 'Anhang-2', 'Anhang-3'];
+  public readonly attachments = [ 'Nachricht', 'Anhang-1', 'Anhang-2', 'Anhang-3', 'Anhang-4' ];
+  public readonly groupedAttachments = [
+    [ this.attachments[0], this.attachments[1], this.attachments[2] ],
+    [ this.attachments[3], this.attachments[4] ],
+  ];
   public readonly attachmentUrl = signal<SafeUrl>('');
-  public readonly selectedAttachments = signal<Array<string>>([...this.attachments]);
   public readonly selectedAttachment = signal(this.attachments[0]);
 
   public show(attachment: string): void {
